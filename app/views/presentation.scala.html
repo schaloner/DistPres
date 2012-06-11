@@ -1,0 +1,44 @@
+@(presentation: Presentation)
+
+@main("DistPres - " + presentation.name) {
+
+<img id="slide" src="@routes.Application.getImageFor(presentation.id, presentation.currentPosition)"/>
+<script type="text/javascript">
+    var mapSocket;
+    var currentPosition = '@presentation.currentPosition';
+
+    $(document).ready(function(){
+        setSlide('@presentation.currentPosition');
+        poll();
+    });
+
+    $(document).keydown(function(e)
+    {
+        if (e.keyCode == 39) {
+            $.post('@routes.Application.nextImage()',
+                    {'presentationId':'@presentation.id'});
+        } else if (e.keyCode == 37) {
+            $.post('@routes.Application.previousImage()',
+                    {'presentationId':'@presentation.id'});
+        } else if (e.keyCode == 82) {
+            $.post('@routes.Application.resetPresentation()',
+                    {'presentationId':'@presentation.id'});
+        }
+    });
+
+    function poll(){
+        $.get('@routes.Application.poll(presentation.id)',
+              function(data) {
+                  if (data != currentPosition) {
+                      currentPosition = data;
+                      setSlide(data);
+                  }
+                  setTimeout(poll, 500);
+              });
+    }
+
+    function setSlide(index) {
+        $('#slide').attr('src', '/i/@presentation.id/' + index);
+    }
+</script>
+}

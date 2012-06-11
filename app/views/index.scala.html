@@ -1,0 +1,49 @@
+@(presentations: List[Presentation])
+
+@main("DistPres") {
+
+<div class="container" xmlns="http://www.w3.org/1999/html">
+
+    <!-- Main hero unit for a primary marketing message or call to action -->
+    <div class="hero-unit">
+        <h1>Welcome to DistPres</h1>
+        <p>DistPres allows you to control presentations to connected browsers, keeping what your audience is looking at in sync with what you're showing.</p>
+    </div>
+
+    <!-- Example row of columns -->
+    <div class="row">
+        <div class="span8">
+            <h2>Presentations</h2>
+            <ul>
+                @for(p <- presentations) {
+                <li>
+                    <a href="@routes.Application.viewPresentation(p.id)">@p.name</a>
+                    <ul>
+                        <li>@p.images.size() slides</li>
+                        <li>Uploaded @p.uploadDate</li>
+                    </ul>
+                </li>
+                }
+            </ul>
+        </div>
+        <div class="span4">
+            <h2>Upload a new presentation</h2>
+            @helper.form(action = routes.Application.upload, 'enctype -> "multipart/form-data") {
+            <input type="file" name="presentationFile">
+            <p>
+                <input type="submit">
+            </p>
+            }
+        </div>
+    </div>
+
+    <hr>
+
+    <footer>
+        <p>A <a href="https://twitter.com/#!/search/FilthyHackFriday" target="_blank">FilthyHackFriday</a> project from <a href="http://www.objectify.be" target="_blank">Objectify</a></p>
+    </footer>
+
+</div>
+
+
+}
